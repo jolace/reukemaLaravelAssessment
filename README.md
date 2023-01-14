@@ -22,3 +22,10 @@ $ docker exec -it app-reukema composer install
 ```
 $ docker exec -it app-reukema  chmod 777 -R storage
 ```
+```
+$ docker exec -it app-reukema  php artisan migrate
+```
+
+## Packages used
+
+laravel/breeze for Auth routes and views 
