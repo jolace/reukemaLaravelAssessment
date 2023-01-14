@@ -29,3 +29,5 @@ $ docker exec -it app-reukema  php artisan migrate
 ## Packages used
 
 laravel/breeze for Auth routes and views 
+
+Spatie  Laravel roles and permissions  https://spatie.be/docs/laravel-permission/v5/advanced-usage/seeding
