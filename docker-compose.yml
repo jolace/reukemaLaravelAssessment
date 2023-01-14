@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  reukemaapp:
+    build:
+      context: .
+      dockerfile: dockerFiles/DockerfileReukema
+    container_name: app-reukema
+    image: 'app-reukema'
+    volumes:
+      - ./project:/var/www/html
+    ports: 
+      - "8092:80"
+
+  reukemaqueue:
+    build:
+      context: .
+      dockerfile: dockerFiles/DockerfileReukemaQueue
+    container_name: app-reukemaqueue
+    image: 'app-reukema-queue'
+    volumes:
+      - ./project:/var/www/html
+    ports: 
+      - "8094:80"
+    environment:
+      QUEUE_DRIVER: database
+
+  reukemadb:
+    image: mysql:8
+    container_name: mysql-reukema
+    restart: always
+    ports: 
+      - "3319:3306"
+    environment:
+      MYSQL_DATABASE: 'reukema'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD: "Reukema@123"
+      MYSQL_USER : "root"
+      MYSQL_PASSWORD : "Reukema@123"
+    volumes:
+      - ./db:/var/lib/mysql
+
+  reukemaadminer:
+    image: adminer
+    container_name: adminer-reukema
+    restart: always
+    ports:
+      - 8091:8080
