@@ -1,8 +1,8 @@
 # Reukema Laravel assessment 20230103
 
 Application is set to work in few docker enviorments.
-1.  Docker **app-reukema** contain application code and execute all client requests
-2.  Docker **app-reukema-queue** care about executing laravel asynchronous jobs and cronjob commands
+1.  Docker **app-reukema** contain application code and execute all client requests and cronjob commands
+2.  Docker **app-reukema-queue** care about executing laravel asynchronous jobs
 3.  Docker **mysql-reukema** is mysql 8 server for mySql database.
 4.  Docker **adminer-reukema** is with installed Adminer UI for manage mySql database
 

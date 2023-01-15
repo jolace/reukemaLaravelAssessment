@@ -19,11 +19,7 @@ services:
     image: 'app-reukema-queue'
     volumes:
       - ./project:/var/www/html
-    ports: 
-      - "8094:80"
-    environment:
-      QUEUE_DRIVER: database
-
+      
   reukemadb:
     image: mysql:8
     container_name: mysql-reukema
