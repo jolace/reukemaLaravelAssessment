@@ -1,10 +1,11 @@
 # Reukema Laravel assessment 20230103
 
 Application is set to work in few docker enviorments.
-1.  Docker **app-reukema** contain application code and execute all client requests and cronjob commands
+1.  Docker **app-reukema** contain application code and execute all client requests
 2.  Docker **app-reukema-queue** care about executing laravel asynchronous jobs
-3.  Docker **mysql-reukema** is mysql 8 server for mySql database.
-4.  Docker **adminer-reukema** is with installed Adminer UI for manage mySql database
+3.  Docker **app-reukema-scheduler** care about cronjob commands
+4.  Docker **mysql-reukema** is mysql 8 server for mySql database.
+5.  Docker **adminer-reukema** is with installed Adminer UI for manage mySql database
 
 ## Runing the application
 
@@ -28,6 +29,10 @@ $ docker exec -it app-reukema  php artisan migrate
 
 ## Packages used
 
-laravel/breeze for Auth routes and views 
+1. laravel/breeze for Auth routes and views 
 
-Spatie  Laravel roles and permissions  https://spatie.be/docs/laravel-permission/v5/advanced-usage/seeding
+2. Spatie for Laravel roles and permissions  https://spatie.be/docs/laravel-permission/v5/advanced-usage/seeding
+
+3. jstable - a lightweight, dependency-free JavaScript plugin which makes a HTML table interactive https://jstable.github.io/
+
+4. Notyf is a minimalistic JavaScript library for toast notifications.  - https://github.com/caroso1222/notyf
