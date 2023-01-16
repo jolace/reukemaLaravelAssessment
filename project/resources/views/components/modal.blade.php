@@ -1,5 +1,6 @@
 @props([
     'name',
+    'id',
     'show' => false,
     'maxWidth' => '2xl'
 ])
@@ -15,6 +16,7 @@ $maxWidth = [
 @endphp
 
 <div
+    id = @js($id)
     x-data="{
         show: @js($show),
         focusables() {
@@ -49,6 +51,7 @@ $maxWidth = [
     style="display: {{ $show ? 'block' : 'none' }};"
 >
     <div
+        id= @js($id."_firstDiv")
         x-show="show"
         class="fixed inset-0 transform transition-all"
         x-on:click="show = false"
@@ -63,6 +66,7 @@ $maxWidth = [
     </div>
 
     <div
+        id= @js($id."_secondDiv")
         x-show="show"
         class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
         x-transition:enter="ease-out duration-300"

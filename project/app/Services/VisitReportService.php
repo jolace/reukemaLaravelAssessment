@@ -9,9 +9,30 @@ use App\Jobs\CreateReportRows;
 
 class VisitReportService implements VisitReportInterface
 {
-	public function __construct()
+	/*
+		Get record by id from Visit report table
+	*/
+	public function get($id)
 	{
+		$vr = VisitReports::where('id',$id)->with('customer')->first();
+        if(!empty($vr->appointment_date))
+            $vr->appointment_date = date('Y-m-d\TH:i:s',strtotime($vr->appointment_date));
 
+		return $vr;
+	}
+	/*
+		Update record in Visit report table
+	*/
+	public function update($id,$data)
+	{
+		
+		if(!empty($data['appointment_date']))
+			$data['appointment_date'] = date('Y-m-d H:i:s',strtotime($data['appointment_date']));
+		
+		if(empty($data['report_text']))
+			$data['report_text'] = NULL;
+
+		return VisitReports::where('id',$id)->update($data);
 	}
 	/*
 		Count Customers that have not report on Visit report table
@@ -133,7 +154,7 @@ class VisitReportService implements VisitReportInterface
 	}
 	/*
 		Calculate Query iteration. 
-		To prevent big load in memorry - for our report calculation we get/insert chunk of data   
+		To prevent big load in memorry for our report calculation we get/insert chunk of data   
 	*/
 	private function calculateQueryIteration($count)
 	{

@@ -1,0 +1,13 @@
+.formInput,.dt-container
+{
+    margin-top : 5%;
+}
+.dt-bottom
+{
+    margin-top : 5%;
+    justify-content: center;
+}
+.customFilter
+{
+    padding:8px 10px;
+}

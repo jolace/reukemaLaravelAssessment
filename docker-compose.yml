@@ -19,7 +19,16 @@ services:
     image: 'app-reukema-queue'
     volumes:
       - ./project:/var/www/html
-      
+  
+  reukemascheduler:
+    build:
+      context: .
+      dockerfile: dockerFiles/DockerfileReukemaScheduler
+    container_name: app-reukema-scheduler
+    image: 'app-reukema-scheduler'
+    volumes:
+      - ./project:/var/www/html
+
   reukemadb:
     image: mysql:8
     container_name: mysql-reukema
