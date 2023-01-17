@@ -27,6 +27,15 @@ $ docker exec -it app-reukema  chmod 777 -R storage
 $ docker exec -it app-reukema  php artisan migrate
 ```
 
+### ENV Variables
+
+```php
+MONTH_INTERVAL = 5 // Month betwen reports
+DEFAULT_QUERY_LIMIIT = 20
+API_KEY_NAME  = ApiKey // Name for key that we will use to access API
+API_KEY_VALUE = 123456 // Api token value
+```
+
 ## Packages used
 
 1. laravel/breeze for Auth routes and views 
@@ -36,3 +45,9 @@ $ docker exec -it app-reukema  php artisan migrate
 3. jstable - a lightweight, dependency-free JavaScript plugin which makes a HTML table interactive https://jstable.github.io/
 
 4. Notyf is a minimalistic JavaScript library for toast notifications.  - https://github.com/caroso1222/notyf
+
+4. Laravel Swagger for API doc
+
+## Author
+
+Aleksandar Jolakoski (https://github.com/jolace)

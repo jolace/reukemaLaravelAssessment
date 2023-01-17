@@ -4,11 +4,17 @@ use App\Models\VisitReports;
 
 class VisitReportDatatable implements DatatableInterface
 {
+    /*
+        Get data that we need for Datatable rows
+    */
     public function prepareOutput($data)
     {
+        
         if($data['userRole'] == 'manager'){
+            $manager = true;
             $vreports = VisitReports::with('Customer');
         } else {
+            $manager = false;
             $vreports = VisitReports::with('Customer')->where('user_id',\Auth::user()->id);
         }
             
@@ -40,19 +46,21 @@ class VisitReportDatatable implements DatatableInterface
         [
             'recordsTotal' => $countVreports,
             'recordsFiltered' => $vreports->count(),
-            'data' => $this->prepareResponse($vreports)
+            'data' => $this->prepareResponse($vreports,$manager)
         ];
 
         return $response;
     
     }
-
-    public function prepareResponse($data)
+    /*
+        Prepare data how Datatable plugin expected
+    */
+    public function prepareResponse($data,$manager)
     {
         $r = [];
         foreach($data as $d)
         {
-            $r[] = [$d->customer->name,$d->appointment_date,strlen(trim($d->report_text)),$d->id];
+            $r[] = [$d->customer->name,$d->appointment_date,strlen(trim($d->report_text)),$d->id,[strlen(trim($d->report_text)),$d->closed,$d->id,$manager]];
         }
         return $r;
     }

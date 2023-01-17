@@ -3,6 +3,7 @@ const notyf = new Notyf({position:{x:'right',y:'top'}});
 const myTable = new JSTable("#basic", 
 {
     sortable: true,
+    perPage : 10,
     searchable :false,
     columns: [
         {   
@@ -22,6 +23,22 @@ const myTable = new JSTable("#basic",
             render: function (cell, idx) {
                 let data = cell.innerHTML;
                 return '<i  data-reportid="'+data+'" class="far fa-edit"></i>';
+            }
+        },
+        {   
+            select: 4,
+            sortable: false,
+            searchable: true,
+            render: function (cell, idx) {                
+                let data = cell.innerHTML;
+                data = data.split(',');
+
+                if(data[0] > 0 && data[1] < 1 && data[3] == "true")
+                    return '<i   data-reportid="'+data[2]+'"  class="fa-solid fa-file-import"></i>';
+                else if(data[1] > 0)
+                    return '<span style="color:blue">Finalised</span>';
+                else
+                    return '<span style="color:red">Not Finalised</span>';
             }
         }
     ],
@@ -43,8 +60,12 @@ document.getElementById('past_dates').addEventListener('click',function(){
 })
 
 document.body.addEventListener( 'click', function ( event ) {
+
     if( event.target.className == 'far fa-edit' ) {
         getDataAndShowModal(event.target.getAttribute('data-reportid'));
+    };
+    if( event.target.className == 'fa-solid fa-file-import' ) {
+        finaliseReport(event.target.getAttribute('data-reportid'));
     };
 });
 
@@ -92,12 +113,28 @@ function getDataAndShowModal(id)
     fetch('/visitreport/'+id)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data)
+
             document.getElementById('customer_h').innerHTML = data.data.customer.name;
             document.getElementById('ad').value = data.data.appointment_date;
             document.getElementById('report_text').value = data.data.report_text;
             if(document.getElementById('as_select'))
                 document.getElementById('as_select').value = data.data.user_id;
+
+            if(data.data.closed == 1)
+            {
+                document.getElementById('update_report').setAttribute('disabled','');
+                document.getElementById('ad').setAttribute('disabled','');
+                document.getElementById('report_text').setAttribute('disabled','');
+                if(document.getElementById('as_select'))
+                    document.getElementById('as_select').setAttribute('disabled','');
+            } else {
+                document.getElementById('update_report').removeAttribute('disabled');
+                document.getElementById('ad').removeAttribute('disabled');
+                document.getElementById('report_text').removeAttribute('disabled');
+                if(document.getElementById('as_select'))
+                    document.getElementById('as_select').removeAttribute('disabled');
+            }
+            
         });
 
         document.getElementById('editModal').style.display = 'block';
@@ -106,13 +143,37 @@ function getDataAndShowModal(id)
         document.getElementById('update_report').setAttribute('data-reportid',id);
 }
 
+async function finaliseReport(id)
+{
+    let response = await  fetch('/visitreport/'+id+'/finalise',
+    {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json','X-CSRF-TOKEN': document.getElementById('csrf-token').getAttribute('content') },      
+    });
+    if(response.status === 403)
+    {
+        let resJSON = await response.json();
+        Object.keys(resJSON.data).forEach(key => {
+            Object.keys(resJSON.data[key]).forEach(errkey => {
+                notyf.error(resJSON.data[key][errkey]);
+            });
+        });
+    } else {
+        if(document.querySelector('.active a'))
+            myTable.paginate(parseInt(document.querySelector('.active a').innerHTML));
+        else
+            myTable.paginate(1);
+        notyf.success('Report has been finalised successfully');
+    }
+   
+       
+}
 async function updateReport(id,requestOptions)
 {
     let response = await fetch('/visitreport/'+id, requestOptions);
     if(response.status === 403)
     {
         let resJSON = await response.json();
-        console.log(resJSON.data);
         Object.keys(resJSON.data).forEach(key => {
             Object.keys(resJSON.data[key]).forEach(errkey => {
                 notyf.error(resJSON.data[key][errkey]);
@@ -122,5 +183,4 @@ async function updateReport(id,requestOptions)
         notyf.success('Report has been updated successfully');
         closeEditModal()
     }
-    console.log(response.status);
 }
