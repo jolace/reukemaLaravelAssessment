@@ -10,6 +10,24 @@ use App\Jobs\CreateReportRows;
 class VisitReportService implements VisitReportInterface
 {
 	/*
+		Get all records from Visit report table
+	*/
+	public function getAll($offset=false,$limit=false)
+	{
+		$vrs = VisitReports::with('assignedEmployee:users.id,users.name,users.email')
+							->with('customer:customers.id,customers.name,customers.email,customers.address,customers.phone');
+
+		if($offset)
+		{
+			if(empty($limit))
+				$limit = env('COMMAND_QUERY_LIMIIT');
+				
+			$vrs = $vrs->offset($offset)->limit($limit);
+		}
+		$vrs = $vrs->get();
+		return $vrs;
+	}
+	/*
 		Get record by id from Visit report table
 	*/
 	public function get($id)

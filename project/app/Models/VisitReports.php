@@ -16,4 +16,8 @@ class VisitReports extends Model
         return $this->hasOne(Customer::class,'id','customer_id');
     }
 
+    function assignedEmployee()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }

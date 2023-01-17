@@ -1,0 +1,116 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Reukema API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/visitreport": {
+            "get": {
+                "tags": [
+                    "Visitreport"
+                ],
+                "summary": "Get list of visit reports with data for assigned user and customer",
+                "description": "Returns list of visit reports",
+                "operationId": "getVisitReportList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation. Return list with visit reports with data for assigned user and customer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": "1"
+                                                },
+                                                "appointment_date": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "report_text": {
+                                                    "type": "string",
+                                                    "example": "Big report text"
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "7"
+                                                },
+                                                "customer_id": {
+                                                    "type": "integer",
+                                                    "example": "12"
+                                                },
+                                                "assigned_employee": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": "7"
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Jim"
+                                                        },
+                                                        "email": {
+                                                            "type": "email",
+                                                            "example": "Jim@reukema.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "customer": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": "12"
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "My company"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "company@mycompany.com"
+                                                        },
+                                                        "address": {
+                                                            "type": "string",
+                                                            "example": "3053 Jenkins Court Suite"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "559-404-4038"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Wrong api key"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
