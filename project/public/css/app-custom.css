@@ -11,3 +11,10 @@
 {
     padding:8px 10px;
 }
+.hideButton
+{
+    display: none;
+}
+.dt-table>tbody>tr>td:first-child {
+    text-align: left !important;
+}

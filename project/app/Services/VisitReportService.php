@@ -6,6 +6,7 @@ use App\Models\VisitReports;
 use Database\Factories\VisitReportsFactory;
 use Illuminate\Database\Eloquent\Builder;
 use App\Jobs\CreateReportRows;
+use App\Jobs\SendReportToCustomer;
 
 class VisitReportService implements VisitReportInterface
 {
@@ -20,7 +21,7 @@ class VisitReportService implements VisitReportInterface
 		if($offset)
 		{
 			if(empty($limit))
-				$limit = env('COMMAND_QUERY_LIMIIT');
+				$limit = env('DEFAULT_QUERY_LIMIIT');
 				
 			$vrs = $vrs->offset($offset)->limit($limit);
 		}
@@ -49,8 +50,16 @@ class VisitReportService implements VisitReportInterface
 		
 		if(empty($data['report_text']))
 			$data['report_text'] = NULL;
-
+		
 		return VisitReports::where('id',$id)->update($data);
+	}
+	/*
+		Finalise visit report
+	*/
+	public function finalise($id)
+	{
+		VisitReports::where('id',$id)->update(['closed'=>1]);
+		SendReportToCustomer::dispatch($id);
 	}
 	/*
 		Count Customers that have not report on Visit report table
@@ -87,7 +96,7 @@ class VisitReportService implements VisitReportInterface
         $count = $this->countCustomersWithOutReport();
 		$iterations = $this->calculateQueryIteration($count);
 		$offset = 0;
-		$limit = env('COMMAND_QUERY_LIMIIT');
+		$limit = env('DEFAULT_QUERY_LIMIIT');
 		
         for($i = 0; $i < $iterations; $i++)
         {
@@ -106,7 +115,7 @@ class VisitReportService implements VisitReportInterface
 		$count = $this->countCustomersWithExpiredReport();
 		$iterations = $this->calculateQueryIteration($count);
 		$offset = 0;
-		$limit = env('COMMAND_QUERY_LIMIIT');
+		$limit = env('DEFAULT_QUERY_LIMIIT');
 
         for($i = 0; $i < $iterations; $i++)
         {
@@ -176,7 +185,7 @@ class VisitReportService implements VisitReportInterface
 	*/
 	private function calculateQueryIteration($count)
 	{
-		$limit = env('COMMAND_QUERY_LIMIIT');
+		$limit = env('DEFAULT_QUERY_LIMIIT');
         $iterations =  $count / $limit;
 		$iterations = ceil($iterations);
 		return (int) $iterations;

@@ -29,9 +29,18 @@ class VisitReportController extends Controller
 
     public function update(Request $req,$id)
     {
-        $validator = \Validator::make($req->all(), [
-            'appointment_date' => 'required',
-        ]);
+        $validator_rules = [
+            'appointment_date' => 'required'
+        ];
+        $validator_messages = [];
+
+        if(\Auth::user()->hasRole('manager'))
+        {
+            $validator_rules['user_id'] = 'required';
+            $validator_messages['user_id.required'] = 'You have to choose the Assignment';
+        }
+
+        $validator = \Validator::make($req->all(),$validator_rules,$validator_messages);
  
         if ($validator->fails()) {
             return response(['data' => $validator->getMessageBag()->toArray()],403);
@@ -42,6 +51,18 @@ class VisitReportController extends Controller
         {
             $flag = $this->vistReportService->update($id,$req->all());
             return response(['data'=>$flag]);
+        } else {
+            return response(['data'=>'Visit report not found'],404);
+        }
+    }
+
+    public function finalise(Request $req,$id)
+    {
+        $vr = VisitReports::where('id',$id)->first();
+        if(!empty($vr) && !empty($vr->report_text))
+        {
+            $flag = $this->vistReportService->finalise($id);
+            return response(['data'=>1]);
         } else {
             return response(['data'=>'Visit report not found'],404);
         }
