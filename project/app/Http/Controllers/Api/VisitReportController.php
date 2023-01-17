@@ -51,6 +51,7 @@ class VisitReportController extends Controller
      *      @OA\Response(
      *          response=401,
      *          description="Unauthenticated",
+     *          @OA\JsonContent(@OA\Property(property="error", type="string", example="Wrong api key"))
      *      ),
      *     )
      */
